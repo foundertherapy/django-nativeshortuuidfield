@@ -8,9 +8,15 @@ workflows:
               only: /.*/
       - test-python-install:
           version: "3.4"
+          filters:
+            tags:
+              only: /.*/
           requires:
             - build
       - deploy:
+          filters:
+            tags:
+              only: /.*/
           requires:
             - build
 jobs:
