@@ -14,11 +14,13 @@ workflows:
           requires:
             - build
       - deploy:
+          requires:
+            - build
           filters:
             tags:
               only: /.*/
-          requires:
-            - build
+            branches:
+              ignore: /.*/
 jobs:
   build:
     docker:
