@@ -25,6 +25,7 @@ class VerifyVersionCommand(install):
             )
             sys.exit(info)
 
+
 setuptools.setup(
     name="django-nativeshortuuidfield",
     version=VERSION,
@@ -51,7 +52,7 @@ setuptools.setup(
     install_requires=[
         "requests==2.18.4",
         "django>=1.11",
-        "shortuuid>=1.0"
+        "django-shortuuidfield"
     ],
     python_requires='>=3',
     cmdclass={
