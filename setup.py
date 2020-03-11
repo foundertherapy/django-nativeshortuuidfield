@@ -25,11 +25,13 @@ class VerifyVersionCommand(install):
             )
             sys.exit(info)
 
+
 setuptools.setup(
     name="django-nativeshortuuidfield",
     version=VERSION,
     description="A decoder/encoder Field for uuid",
     long_description=readme(),
+    long_description_content_type='text/markdown',
     url="https://github.com/foundertherapy/django-nativeshortuuidfield",
     author="Laith Abu Zainih",
     author_email="systems@foundertherapy.co",
@@ -51,7 +53,7 @@ setuptools.setup(
     install_requires=[
         "requests==2.18.4",
         "django>=1.11",
-        "shortuuid>=1.0"
+        "django-shortuuidfield"
     ],
     python_requires='>=3',
     cmdclass={
