@@ -28,5 +28,5 @@ Notes
 
 * NativeShortUUIDField is a subclass of django.db.models.UUIDField
 
-* You can pass usual Django CharField parameters on init, although some of them are added/overwritten: 
+* You can pass usual Django UUIDField parameters on init, although some of them are added/overwritten:
     + blank=True, editable=False (set auto=False to remove these fields enforcement)

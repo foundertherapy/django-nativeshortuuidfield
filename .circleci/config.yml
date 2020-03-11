@@ -124,7 +124,7 @@ jobs:
           command: |
             echo -e "[pypi]" >> ~/.pypirc
             echo -e "username = levlaz" >> ~/.pypirc
-            echo -e "password = pypi-AgENdGVzdC5weXBpLm9yZwIkOWU0Yzc4MTItNjIxOS00MGE3LThiZDktN2JhOGJmMDUxOTdhAAIleyJwZXJtaXNzaW9ucyI6ICJ1c2VyIiwgInZlcnNpb24iOiAxfQAABiBuTmdnl7ud93YKSi6ITkEdOZLZ9HGJPRKQ0Bi8IgKEQw" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
           name: create packages
           command: |
@@ -133,4 +133,4 @@ jobs:
           name: upload to pypi
           command: |
             . venv/bin/activate
-            twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+            twine upload dist/*
