@@ -2,7 +2,7 @@ django-nativeshortuuidfield
 ----------------
 
 Provides a NativeShortUUIDField for your Django models which uses the base-57 "Short UUID" package at https://github.com/stochastic-technologies/shortuuid/ to be used in Python
-and Store it as full UUID in database.
+and store it as full UUID in database.
 
 Installation
 ============
@@ -14,9 +14,9 @@ Install it with pip (or easy_install)::
 Usage
 =====
 
-First you'll need to attach a NativeShortUUIDField to your class::
+First you'll need to add a NativeShortUUIDField to your class::
 
-	from shortuuidfield import ShortUUIDField
+	from native_shortuuid import NativeShortUUIDField
 	
 	class MyModel(models.Model):
 	    uuid = NativeShortUUIDField(unique=True, default=uuid.uuid4)
