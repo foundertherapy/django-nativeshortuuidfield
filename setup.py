@@ -51,7 +51,6 @@ setuptools.setup(
     keywords='shortuuid uuid nativeshortuuid',
     packages=setuptools.find_packages(),
     install_requires=[
-        "requests==2.18.4",
         "django>=1.11",
         "django-shortuuidfield"
     ],

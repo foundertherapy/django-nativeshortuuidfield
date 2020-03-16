@@ -1,8 +1,9 @@
-import shortuuid
 import django.db.models
 from django.core.exceptions import ValidationError
 from django.forms import CharField
 from django.utils.translation import gettext_lazy as _
+
+import shortuuid
 
 
 class NativeShortUUIDFormField(CharField):
