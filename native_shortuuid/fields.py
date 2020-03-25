@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.forms import CharField
 from django.utils.translation import gettext_lazy as _
 
+import uuid
 import shortuuid
 
 
@@ -23,6 +24,15 @@ class NativeShortUUIDFormField(CharField):
 
 
 class NativeShortUUIDField(django.db.models.UUIDField):
+    def __init__(self, verbose_name=None, **kwargs):
+        default = kwargs.get('default', None)
+        if default is uuid.uuid4:
+            def uuid4():
+                return shortuuid.encode(uuid.uuid4())
+
+            kwargs['default'] = uuid4
+        super().__init__(verbose_name, **kwargs)
+
     def from_db_value(self, value, expression, connection):
         if value is None:
             return value
