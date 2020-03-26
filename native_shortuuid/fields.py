@@ -7,6 +7,10 @@ import uuid
 import shortuuid
 
 
+def short_uuid4():
+    return shortuuid.encode(uuid.uuid4())
+
+
 class NativeShortUUIDFormField(CharField):
     default_error_messages = {
         'invalid': _('Enter a valid ShortUUID.'),
@@ -27,10 +31,7 @@ class NativeShortUUIDField(django.db.models.UUIDField):
     def __init__(self, verbose_name=None, **kwargs):
         default = kwargs.get('default', None)
         if default is uuid.uuid4:
-            def uuid4():
-                return shortuuid.encode(uuid.uuid4())
-
-            kwargs['default'] = uuid4
+            kwargs['default'] = short_uuid4
         super().__init__(verbose_name, **kwargs)
 
     def from_db_value(self, value, expression, connection):
