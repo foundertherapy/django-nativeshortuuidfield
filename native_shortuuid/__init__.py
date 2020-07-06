@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from .fields import NativeShortUUIDField
 from .fields import NativeShortUUIDFormField
+from .admin import NativeUUIDSearchMixin
 from . import validation
 
 try:
