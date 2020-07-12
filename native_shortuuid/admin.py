@@ -7,7 +7,7 @@ class NativeUUIDSearchMixin:
         if not hasattr(self, '_uuid_search_fields'):
             self._uuid_search_fields = tuple(x for x in search_fields if x.endswith('uuid'))
             self._non_uuid_search_fields = tuple(x for x in search_fields if not x.endswith('uuid'))
-        return self._non_uuid_search_fields
+        return self._non_uuid_search_fields or self._non_uuid_search_fields + ('id', )
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(request, queryset, search_term)
