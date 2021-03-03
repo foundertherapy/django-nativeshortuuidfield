@@ -1,4 +1,4 @@
-import shortuuid
+import native_shortuuid
 
 
 class NativeUUIDSearchMixin:
@@ -12,7 +12,7 @@ class NativeUUIDSearchMixin:
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(request, queryset, search_term)
         try:
-            search_term_as_uuid = shortuuid.decode(search_term.strip())
+            search_term_as_uuid = native_shortuuid.decode(search_term.strip())
         except ValueError as e:
             pass
         else:
