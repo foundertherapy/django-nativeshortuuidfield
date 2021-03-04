@@ -13,7 +13,7 @@ class NativeUUIDSearchMixin:
         queryset, use_distinct = super().get_search_results(request, queryset, search_term)
         try:
             search_term_as_uuid = native_shortuuid.decode(search_term.strip())
-        except ValueError as e:
+        except ValueError:
             pass
         else:
             for uuid_search_field in self._uuid_search_fields:

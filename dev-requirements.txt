@@ -1,1 +1,4 @@
 isort
+flake8
+django
+shortuuid
