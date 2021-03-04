@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 
+from . import validation
+from .admin import NativeUUIDSearchMixin
 from .fields import NativeShortUUIDField
 from .fields import NativeShortUUIDFormField
 from .fields import decode
-from .admin import NativeUUIDSearchMixin
-from . import validation
 
 try:
     VERSION = __import__('pkg_resources') \

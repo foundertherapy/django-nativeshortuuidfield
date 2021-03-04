@@ -1,5 +1,6 @@
-import shortuuid
 from django.urls import register_converter
+
+import shortuuid
 
 
 class ShortUUIDConverter:
