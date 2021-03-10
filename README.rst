@@ -1,5 +1,5 @@
 django-nativeshortuuidfield
-----------------
+---------------------------
 
 |Tests| |Linters|
 
@@ -33,6 +33,27 @@ Notes
 * You can pass usual Django UUIDField parameters on init, although some of them are added/overwritten:
     + blank=True, editable=False (set auto=False to remove these fields enforcement)
 
+Contribution Notes
+^^^^^^^^^^^^^^^^^^
+
+Pull Request
+""""""""""""
+* Increase the version number in the ``setup.py`` to the new version that the new pull request represents.
+
+Publishing the Package
+"""""""""""""""""""""""""
+After the pull request gets merged into the master branch a new release should be created
+
+* Create a new tag with the same version number you updated the ``setup.py`` with::
+
+    git checkout master
+    git tag -a 2.1.0 -m 'fix importing order'
+    git push origin 2.1.0
+
+* Go to GitHub's releases section and create a new release:
+    + Chose the tag version that you just created
+    + Fill the release title with the same version number
+    + Add a description of the release and publish it
 
 
 .. |Linters| image:: https://github.com/foundertherapy/django-nativeshortuuidfield/actions/workflows/linters.yml/badge.svg
