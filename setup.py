@@ -4,12 +4,12 @@ import sys
 import setuptools
 from setuptools.command.install import install
 
-VERSION = "1.3.0"
+VERSION = "1.3.1"
 
 
 def readme():
     """print long description"""
-    with open('README.rst') as f:
+    with open('README.md') as f:
         return f.read()
 
 
