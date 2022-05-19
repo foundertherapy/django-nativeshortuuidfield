@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 import django.db.models
@@ -5,7 +6,10 @@ from django.core.exceptions import ValidationError
 from django.forms import CharField
 from django.utils.translation import gettext_lazy as _
 
+import rest_framework.serializers
 import shortuuid
+
+logger = logging.getLogger(__name__)
 
 
 def short_uuid4():
@@ -36,6 +40,31 @@ class NativeShortUUIDFormField(CharField):
         except ValueError:
             raise ValidationError(self.error_messages['invalid'], code='invalid')
         return value
+
+
+class NativeShortUUIDSerializerField(rest_framework.serializers.CharField):
+    default_error_messages = {
+        'invalid': _('Must be a valid short UUID.'),
+    }
+
+    def __init__(self, **kwargs):
+        kwargs['min_length'] = kwargs['max_length'] = 22
+        kwargs['trim_whitespace'] = True
+        super().__init__(**kwargs)
+
+    def to_internal_value(self, data):
+        # check that data is a valid shortuuid
+        try:
+            shortuuid.decode(data)
+        except Exception as e:
+            logger.error(e, exc_info=True)
+            self.fail('invalid', value=data)
+        return super().to_internal_value(data)
+
+    def to_representation(self, value):
+        if isinstance(value, uuid.UUID):
+            return shortuuid.encode(value)
+        return str(value)
 
 
 class NativeShortUUIDField(django.db.models.UUIDField):

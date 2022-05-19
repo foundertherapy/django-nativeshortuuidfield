@@ -1,4 +1,5 @@
 isort
 flake8
 django
+djangorestframework
 shortuuid
