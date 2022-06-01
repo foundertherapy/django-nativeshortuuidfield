@@ -24,10 +24,11 @@ class NativeUUIDSearchMixin:
         # We send the search_term as None to remove the search_fields from the query and add them properly here
         queryset, use_distinct = super().get_search_results(request, queryset, search_term=None)
         field_queries = django.db.models.Q()
-        if self.is_valid_shortuuid(search_term):
-            for field_name_uuid in self._uuid_search_fields:
-                field_queries |= django.db.models.Q(**{field_name_uuid: search_term, })
+        if search_term:
+            if self.is_valid_shortuuid(search_term):
+                for field_name_uuid in self._uuid_search_fields:
+                    field_queries |= django.db.models.Q(**{field_name_uuid: search_term, })
 
-        for field_name in self._non_uuid_search_fields:
-            field_queries |= django.db.models.Q(**{'{}__icontains'.format(field_name): search_term, })
+            for field_name in self._non_uuid_search_fields:
+                field_queries |= django.db.models.Q(**{'{}__icontains'.format(field_name): search_term, })
         return queryset.filter(field_queries), use_distinct
