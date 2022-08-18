@@ -23,8 +23,23 @@ class MyModel(models.Model):
     uuid = NativeShortUUIDField(unique=True, default=uuid.uuid4)
 ```
 
+If you want to add the ability to search by shortuuid in `ModelAdmin` you need to inherit `NativeUUIDSearchMixin`
+```python
+from native_shortuuid.admin import NativeUUIDSearchMixin
+
+@admin.register(models.MyModel)
+class MyModelAdmin(NativeUUIDSearchMixin, admin.ModelAdmin):
+    search_fields = ('uuid', )
+``` 
+
 Enjoy!
 
+## Settings
+* `ADMIN_AUTO_EXTRACT_UUID_SEARCH_FIELDS`: default `True`  
+    + This setting is to auto fill `search_uuid_fields` in the ModelAdmins that inherits `NativeUUIDSearchMixin` 
+    with all shortuuid fields that are in the `search_fields` array.
+    if you turned it off, you'll need to define `search_uuid_fields` on you ModelAdmin in order to search on shortuuid fields
+    
 ## Notes
 
 * NativeShortUUIDField is a subclass of django.db.models.UUIDField
