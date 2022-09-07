@@ -1,4 +1,3 @@
-import logging
 import uuid
 
 import django.db.models
@@ -8,8 +7,6 @@ from django.utils.translation import gettext_lazy as _
 
 import rest_framework.serializers
 import shortuuid
-
-logger = logging.getLogger(__name__)
 
 
 def short_uuid4():
@@ -56,8 +53,7 @@ class NativeShortUUIDSerializerField(rest_framework.serializers.CharField):
         # check that data is a valid shortuuid
         try:
             shortuuid.decode(data)
-        except Exception as e:
-            logger.error(e, exc_info=True)
+        except Exception:
             self.fail('invalid', value=data)
         return super().to_internal_value(data)
 
