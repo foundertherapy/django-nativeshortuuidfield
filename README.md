@@ -32,11 +32,23 @@ class MyModelAdmin(NativeUUIDSearchMixin, admin.ModelAdmin):
     search_fields = ('uuid', )
 ``` 
 
+If you want to have to ability to write your own uuid search fields list
+```python
+from native_shortuuid.admin import NativeUUIDSearchMixin
+
+@admin.register(models.MyModel)
+class MyModelAdmin(NativeUUIDSearchMixin, admin.ModelAdmin):
+    admin_auto_extract_uuid_search_fields = False
+    search_fields = ('name', )
+    search_uuid_fields = ['uuid', 'foreign_model__uuid']
+``` 
+
+
 Enjoy!
 
 ## Settings
-* `ADMIN_AUTO_EXTRACT_UUID_SEARCH_FIELDS`: default `True`  
-    + This setting is to auto fill `search_uuid_fields` in the ModelAdmins that inherits `NativeUUIDSearchMixin` 
+* `ADMIN_AUTO_EXTRACT_UUID_SEARCH_FIELDS`: default `True`
+    + This setting is to autofill `search_uuid_fields` in the ModelAdmins that inherits `NativeUUIDSearchMixin` 
     with all shortuuid fields that are in the `search_fields` array.
     if you turned it off, you'll need to define `search_uuid_fields` on you ModelAdmin in order to search on shortuuid fields
     
