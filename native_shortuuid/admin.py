@@ -6,6 +6,7 @@ import native_shortuuid
 
 class NativeUUIDSearchMixin:
     search_uuid_fields = []
+    admin_auto_extract_uuid_search_fields = True  # To customize a specific admins instead of all
 
     def is_valid_shortuuid(self, search_term):
         try:
@@ -16,14 +17,18 @@ class NativeUUIDSearchMixin:
 
         return True
 
+    def is_model_field_native_short_uuid(self, search_field):
+        model_field = next((field for field in self.model._meta.fields if field.attname == search_field), None)
+        return model_field and isinstance(model_field, native_shortuuid.NativeShortUUIDField)
+
     def get_search_fields(self, request):
         search_fields = list(super().get_search_fields(request) or [])
-        if getattr(django.conf.settings, 'ADMIN_AUTO_EXTRACT_UUID_SEARCH_FIELDS', True):
-            self.search_uuid_fields = []
-            for field in self.model._meta.fields:
-                if field.attname in search_fields and isinstance(field, native_shortuuid.NativeShortUUIDField):
-                    self.search_uuid_fields.append(field.attname)
-                    search_fields.remove(field.attname)
+        if getattr(django.conf.settings, 'ADMIN_AUTO_EXTRACT_UUID_SEARCH_FIELDS', True) \
+                and self.admin_auto_extract_uuid_search_fields:
+            for search_field in search_fields:
+                if self.is_model_field_native_short_uuid(search_field) or search_field.endswith('uuid'):
+                    self.search_uuid_fields.append(search_field)
+                    search_fields.remove(search_field)
         return search_fields or ('id',)
 
     def get_search_results(self, request, queryset, search_term):
