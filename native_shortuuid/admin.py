@@ -25,7 +25,8 @@ class NativeUUIDSearchMixin:
         search_fields = list(super().get_search_fields(request) or [])
         if getattr(django.conf.settings, 'ADMIN_AUTO_EXTRACT_UUID_SEARCH_FIELDS', True) \
                 and self.admin_auto_extract_uuid_search_fields:
-            for search_field in search_fields:
+            self.search_uuid_fields = []
+            for search_field in search_fields.copy():
                 if self.is_model_field_native_short_uuid(search_field) or search_field.endswith('uuid'):
                     self.search_uuid_fields.append(search_field)
                     search_fields.remove(search_field)
