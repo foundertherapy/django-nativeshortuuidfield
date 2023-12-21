@@ -1,7 +1,10 @@
 from __future__ import absolute_import
 
 from . import validation
+from .admin import NativeUUID20SearchMixin
 from .admin import NativeUUIDSearchMixin
+from .fields import NativeShortUUID20Field
+from .fields import NativeShortUUID20FormField
 from .fields import NativeShortUUIDField
 from .fields import NativeShortUUIDFormField
 from .fields import decode

@@ -9,17 +9,31 @@ import rest_framework.serializers
 import shortuuid
 
 
+def uuid4_12bits_masked():
+    random_uuid = uuid.uuid4()
+    # Convert the UUID to its 128-bit integer representation
+    int_representation = random_uuid.int
+    bitmask = (1 << 116) - 1
+    modified_int = int_representation & bitmask
+    # Convert the modified integer back to a UUID
+    return uuid.UUID(int=modified_int)
+
+
+def short_uuid4_20():
+    return shortuuid.encode(uuid4_12bits_masked(), pad_length=20)
+
+
 def short_uuid4():
     return shortuuid.encode(uuid.uuid4())
 
 
-def decode(value):
+def decode(value, shortuuid_len=22):
     """Decode the value from ShortUUID to UUID.
 
     Raises ValueError when the value is not valid.
     """
-    if not isinstance(value, str) or len(value) != 22:
-        raise ValueError('badly formed ShortUUID')
+    if not isinstance(value, str) or len(value) != shortuuid_len:
+        raise ValueError('Badly formed ShortUUID')
     return shortuuid.decode(value)
 
 
@@ -36,6 +50,24 @@ class NativeShortUUIDFormField(CharField):
             decode(value)
         except ValueError:
             raise ValidationError(self.error_messages['invalid'], code='invalid')
+        return value
+
+
+class NativeShortUUID20FormField(NativeShortUUIDFormField):
+    def to_python(self, value):
+        value = super().to_python(value)
+        if value in self.empty_values:
+            return None
+
+        try:
+            decode(value, shortuuid_len=20)
+        except ValueError:
+            raise ValidationError(self.error_messages['invalid'], code='invalid')
+
+        if len(value) == 22:
+            # Always trim the first 2 chars of a 22-chars shortuuid
+            value = value[2:]
+
         return value
 
 
@@ -60,6 +92,26 @@ class NativeShortUUIDSerializerField(rest_framework.serializers.CharField):
     def to_representation(self, value):
         if isinstance(value, uuid.UUID):
             return shortuuid.encode(value)
+        return str(value)
+
+
+class NativeShortUUID20SerializerField(NativeShortUUIDSerializerField):
+    def __init__(self, **kwargs):
+        kwargs['min_length'] = kwargs['max_length'] = 20
+        kwargs['trim_whitespace'] = True
+        super().__init__(**kwargs)
+
+    def to_internal_value(self, data):
+        # check that data is a valid shortuuid
+        try:
+            decode(data, shortuuid_len=20)
+        except Exception:
+            self.fail('invalid', value=data)
+        return super().to_internal_value(data)
+
+    def to_representation(self, value):
+        if isinstance(value, uuid.UUID):
+            return shortuuid.encode(value, pad_length=20)
         return str(value)
 
 
@@ -100,5 +152,42 @@ class NativeShortUUIDField(django.db.models.UUIDField):
     def formfield(self, **kwargs):
         return super().formfield(**{
             'form_class': NativeShortUUIDFormField,
+            **kwargs,
+        })
+
+
+class NativeShortUUID20Field(NativeShortUUIDField):
+    def __init__(self, verbose_name=None, **kwargs):
+        self.default_value = kwargs.get('default', None)
+        if self.default_value is uuid4_12bits_masked:
+            kwargs['default'] = short_uuid4_20
+        super().__init__(verbose_name, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+        if self.default_value is uuid4_12bits_masked:
+            kwargs['default'] = uuid4_12bits_masked
+        return name, path, args, kwargs
+
+    def from_db_value(self, value, expression, connection):
+        if value is None:
+            return value
+        return shortuuid.encode(value, pad_length=20)
+
+    def to_python(self, value):
+        if value is not None and not isinstance(value, uuid.UUID):
+            try:
+                return decode(value, shortuuid_len=20)
+            except ValueError:
+                raise ValidationError(
+                    self.error_messages['invalid'],
+                    code='invalid',
+                    params={'value': value},
+                )
+        return value
+
+    def formfield(self, **kwargs):
+        return super().formfield(**{
+            'form_class': NativeShortUUID20FormField,
             **kwargs,
         })

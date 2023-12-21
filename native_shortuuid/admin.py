@@ -19,7 +19,9 @@ class NativeUUIDSearchMixin:
 
     def is_model_field_native_short_uuid(self, search_field):
         model_field = next((field for field in self.model._meta.fields if field.attname == search_field), None)
-        return model_field and isinstance(model_field, native_shortuuid.NativeShortUUIDField)
+        return model_field and (
+            isinstance(model_field, native_shortuuid.NativeShortUUIDField) or
+            isinstance(model_field, native_shortuuid.NativeShortUUID20Field))
 
     def get_search_fields(self, request):
         search_fields = list(super().get_search_fields(request) or [])
@@ -42,3 +44,18 @@ class NativeUUIDSearchMixin:
             return queryset.filter(field_queries), use_distinct
 
         return results_queryset, use_distinct
+
+
+class NativeUUID20SearchMixin(NativeUUIDSearchMixin):
+    def is_valid_shortuuid(self, search_term):
+        try:
+            # It's not decode-able, thus, not a shortuuid
+            native_shortuuid.decode(search_term, shortuuid_len=20)
+        except ValueError:
+            return False
+
+        return True
+
+    def is_model_field_native_short_uuid(self, search_field):
+        model_field = next((field for field in self.model._meta.fields if field.attname == search_field), None)
+        return model_field and isinstance(model_field, native_shortuuid.NativeShortUUID20Field)
