@@ -53,7 +53,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "django>=1.11",
-        "djangorestframework>=3.13.1"
+        "djangorestframework>=3.13.1",
         "django-shortuuidfield"
     ],
     python_requires='>=3',
