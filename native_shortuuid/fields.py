@@ -169,7 +169,7 @@ class NativeShortUUID20Field(django.db.models.UUIDField):
     default_error_messages = {
         'invalid': _('“%(value)s” is not a valid ShortUUID.'),
     }
-    
+
     def __init__(self, verbose_name=None, **kwargs):
         self.default_value = kwargs.get('default', None)
         if self.default_value is uuid4_12bits_masked:

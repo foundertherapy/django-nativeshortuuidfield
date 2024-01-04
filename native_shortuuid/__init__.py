@@ -7,10 +7,10 @@ from .fields import NativeShortUUID20Field
 from .fields import NativeShortUUID20FormField
 from .fields import NativeShortUUIDField
 from .fields import NativeShortUUIDFormField
-from .fields import decode
 from .fields import convert_uuid_to_uuid_v2
-from .fields import uuid4_12bits_masked
+from .fields import decode
 from .fields import short_uuid4_20
+from .fields import uuid4_12bits_masked
 
 try:
     VERSION = __import__('pkg_resources') \
