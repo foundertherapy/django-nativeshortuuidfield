@@ -9,6 +9,13 @@ import rest_framework.serializers
 import shortuuid
 
 
+def convert_uuid_to_uuid_v2(uuid22):
+    if isinstance(uuid22, uuid.UUID):
+        uuid22 = shortuuid.encode(uuid22)
+    shortuuid20 = uuid22[2:]
+    return shortuuid.decode(shortuuid20)
+
+
 def uuid4_12bits_masked():
     random_uuid = uuid.uuid4()
     # Convert the UUID to its 128-bit integer representation
@@ -95,7 +102,7 @@ class NativeShortUUIDSerializerField(rest_framework.serializers.CharField):
         return str(value)
 
 
-class NativeShortUUID20SerializerField(NativeShortUUIDSerializerField):
+class NativeShortUUID20SerializerField(rest_framework.serializers.CharField):
     def __init__(self, **kwargs):
         kwargs['min_length'] = kwargs['max_length'] = 20
         kwargs['trim_whitespace'] = True
@@ -111,7 +118,9 @@ class NativeShortUUID20SerializerField(NativeShortUUIDSerializerField):
 
     def to_representation(self, value):
         if isinstance(value, uuid.UUID):
-            return shortuuid.encode(value, pad_length=20)
+            value = shortuuid.encode(value, pad_length=20)
+        if len(value) == 22:
+            value = value[2:]
         return str(value)
 
 
@@ -156,7 +165,11 @@ class NativeShortUUIDField(django.db.models.UUIDField):
         })
 
 
-class NativeShortUUID20Field(NativeShortUUIDField):
+class NativeShortUUID20Field(django.db.models.UUIDField):
+    default_error_messages = {
+        'invalid': _('“%(value)s” is not a valid ShortUUID.'),
+    }
+    
     def __init__(self, verbose_name=None, **kwargs):
         self.default_value = kwargs.get('default', None)
         if self.default_value is uuid4_12bits_masked:
