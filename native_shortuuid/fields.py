@@ -106,7 +106,7 @@ class NativeShortUUID20SerializerField(rest_framework.serializers.CharField):
     default_error_messages = {
         'invalid': _('Must be a valid short UUID.'),
     }
-    
+
     def __init__(self, **kwargs):
         kwargs['min_length'] = kwargs['max_length'] = 20
         kwargs['trim_whitespace'] = True
