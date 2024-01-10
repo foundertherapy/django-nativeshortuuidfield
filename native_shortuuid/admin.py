@@ -50,7 +50,7 @@ class NativeUUID20SearchMixin(NativeUUIDSearchMixin):
     def is_valid_shortuuid(self, search_term):
         try:
             # It's not decode-able, thus, not a shortuuid
-            native_shortuuid.decode(search_term, shortuuid_len=20)
+            native_shortuuid.decode(search_term)
         except ValueError:
             return False
 

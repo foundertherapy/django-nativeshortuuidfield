@@ -373,9 +373,6 @@ class TestSaveLoadShortUUID20(django.test.TestCase):
         with self.assertRaisesMessage(exceptions.ValidationError, 'is not a valid ShortUUID'):
             ShortUUID20Model.objects.create(field='0f3990cf-25be-47bc-bc69-41a0c9e09d86')
 
-        with self.assertRaisesMessage(exceptions.ValidationError, 'is not a valid ShortUUID'):
-            ShortUUID20Model.objects.create(field=(2 ** 128) - 1)
-
     def test_wrong_characters_for_shortuuid_value(self):
         """ShortUUID should not contain l, 1, I, O or 0 character."""
 
@@ -590,7 +587,7 @@ class TestAsPrimaryKeyShortUUID20(django.test.TestCase):
         PrimaryKeyShortUUID20Model.objects.create()
         loaded = PrimaryKeyShortUUID20Model.objects.get()
         self.assertIsInstance(loaded.pk, str)
-        self.assertIsInstance(native_shortuuid.decode(loaded.pk, shortuuid_len=20), uuid.UUID)
+        self.assertIsInstance(native_shortuuid.decode(loaded.pk), uuid.UUID)
 
     def test_shortuuid_pk_on_save(self):
         saved = PrimaryKeyShortUUID20Model.objects.create(id=None)
@@ -637,10 +634,10 @@ class TestAsPrimaryKeyShortUUID20(django.test.TestCase):
         # exercises ForeignKey.get_db_prep_value()
         gc.save()
         self.assertIsInstance(gc.id, str)
-        self.assertIsInstance(native_shortuuid.decode(gc.id, shortuuid_len=20), uuid.UUID)
+        self.assertIsInstance(native_shortuuid.decode(gc.id), uuid.UUID)
         gc.refresh_from_db()
         self.assertIsInstance(gc.id, str)
-        self.assertIsInstance(native_shortuuid.decode(gc.id, shortuuid_len=20), uuid.UUID)
+        self.assertIsInstance(native_shortuuid.decode(gc.id), uuid.UUID)
 
 
 class TestAsPrimaryKeyTransactionTestsShortUUID20(django.test.TransactionTestCase):

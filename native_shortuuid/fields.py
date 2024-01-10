@@ -9,10 +9,19 @@ import rest_framework.serializers
 import shortuuid
 
 
-def convert_uuid_to_uuid_v2(uuid22):
-    if isinstance(uuid22, uuid.UUID):
-        uuid22 = shortuuid.encode(uuid22)
-    shortuuid20 = uuid22[2:]
+def convert_uuid_to_uuid_v2(uuid_or_shortuuid22):
+    if isinstance(uuid_or_shortuuid22, uuid.UUID):
+        shortuuid22 = shortuuid.encode(uuid_or_shortuuid22)
+    else:
+        shortuuid22 = uuid_or_shortuuid22
+
+    if len(shortuuid22) == 22:
+        shortuuid20 = shortuuid22[2:]
+    elif len(shortuuid22) == 20:
+        shortuuid20 = shortuuid22
+    else:
+        raise ValueError(f'Invalid ShortUUID {shortuuid22}')
+
     return shortuuid.decode(shortuuid20)
 
 
@@ -34,12 +43,12 @@ def short_uuid4():
     return shortuuid.encode(uuid.uuid4())
 
 
-def decode(value, shortuuid_len=22):
+def decode(value):
     """Decode the value from ShortUUID to UUID.
 
     Raises ValueError when the value is not valid.
     """
-    if not isinstance(value, str) or len(value) != shortuuid_len:
+    if not isinstance(value, str) or len(value) not in (20, 22, ):
         raise ValueError('Badly formed ShortUUID')
     return shortuuid.decode(value)
 
@@ -67,7 +76,7 @@ class NativeShortUUID20FormField(NativeShortUUIDFormField):
             return None
 
         try:
-            decode(value, shortuuid_len=20)
+            decode(value)
         except ValueError:
             raise ValidationError(self.error_messages['invalid'], code='invalid')
 
@@ -91,7 +100,7 @@ class NativeShortUUIDSerializerField(rest_framework.serializers.CharField):
     def to_internal_value(self, data):
         # check that data is a valid shortuuid
         try:
-            shortuuid.decode(data)
+            decode(data)
         except Exception:
             self.fail('invalid', value=data)
         return super().to_internal_value(data)
@@ -108,16 +117,21 @@ class NativeShortUUID20SerializerField(rest_framework.serializers.CharField):
     }
 
     def __init__(self, **kwargs):
-        kwargs['min_length'] = kwargs['max_length'] = 20
+        kwargs['min_length'] = 20
+        kwargs['max_length'] = 22
         kwargs['trim_whitespace'] = True
         super().__init__(**kwargs)
 
     def to_internal_value(self, data):
         # check that data is a valid shortuuid
         try:
-            decode(data, shortuuid_len=20)
+            decode(data)
         except Exception:
             self.fail('invalid', value=data)
+
+        if len(data) == 22:
+            data = data[2:]
+
         return super().to_internal_value(data)
 
     def to_representation(self, value):
@@ -194,7 +208,9 @@ class NativeShortUUID20Field(django.db.models.UUIDField):
     def to_python(self, value):
         if value is not None and not isinstance(value, uuid.UUID):
             try:
-                return decode(value, shortuuid_len=20)
+                if len(value) != 20:
+                    raise ValueError
+                return decode(value)
             except ValueError:
                 raise ValidationError(
                     self.error_messages['invalid'],
