@@ -12,7 +12,7 @@ def validate_shortuuid(val):
 
 
 class ShortUUIDConverter:
-    regex = '[{}]{{20}}(?:[{}]{{2}})?'.format(shortuuid.get_alphabet(), shortuuid.get_alphabet())
+    regex = '[{}]{{20}}([{}]{{2}})?'.format(shortuuid.get_alphabet(), shortuuid.get_alphabet())
 
     def to_python(self, value):
         return value
@@ -22,7 +22,7 @@ class ShortUUIDConverter:
 
 
 class ShortUUID20Converter:
-    regex = '[{}]{{20}}(?:[{}]{{2}})?'.format(shortuuid.get_alphabet(), shortuuid.get_alphabet())
+    regex = '[{}]{{20}}([{}]{{2}})?'.format(shortuuid.get_alphabet(), shortuuid.get_alphabet())
 
     def to_python(self, value):
         if len(value) == 22:

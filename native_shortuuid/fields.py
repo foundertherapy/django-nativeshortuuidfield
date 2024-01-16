@@ -93,7 +93,8 @@ class NativeShortUUIDSerializerField(rest_framework.serializers.CharField):
     }
 
     def __init__(self, **kwargs):
-        kwargs['min_length'] = kwargs['max_length'] = 22
+        kwargs['min_length'] = 20
+        kwargs['max_length'] = 22
         kwargs['trim_whitespace'] = True
         super().__init__(**kwargs)
 
