@@ -204,7 +204,12 @@ class NativeShortUUID20Field(django.db.models.UUIDField):
     def from_db_value(self, value, expression, connection):
         if value is None:
             return value
-        return shortuuid.encode(value, pad_length=20)
+        shortuuid_value = shortuuid.encode(value, pad_length=20)
+        if len(shortuuid_value) > 20:
+            # If the resulted shortuuid did not fit in 20 chars,
+            # then this is an old uuid which should result in 22 chars instead.
+            shortuuid_value = shortuuid.encode(value, pad_length=22)
+        return shortuuid_value
 
     def to_python(self, value):
         if value is not None and not isinstance(value, uuid.UUID):

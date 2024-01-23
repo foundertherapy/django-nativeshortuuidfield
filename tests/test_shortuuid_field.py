@@ -108,7 +108,7 @@ class TestMethods(django.test.SimpleTestCase):
     def test_to_python_shortuuid_too_small(self):
         # Fails for strings less than 22 characters.
         with self.assertRaises(exceptions.ValidationError):
-            native_shortuuid.NativeShortUUIDField().to_python('2' * 21)
+            native_shortuuid.NativeShortUUIDField().to_python('2' * 19)
 
 
 class TestQuerying(django.test.TestCase):
@@ -421,7 +421,7 @@ class TestMethodsShortUUID20(django.test.SimpleTestCase):
     def test_to_python_shortuuid_too_large(self):
         # Fails for strings larger than 22 characters.
         with self.assertRaises(exceptions.ValidationError):
-            native_shortuuid.NativeShortUUID20Field().to_python('2' * 21)
+            native_shortuuid.NativeShortUUID20Field().to_python('2' * 23)
 
     def test_to_python_shortuuid_too_small(self):
         # Fails for strings less than 22 characters.

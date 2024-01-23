@@ -4,7 +4,7 @@ import sys
 import setuptools
 from setuptools.command.install import install
 
-VERSION = "1.4.11"
+VERSION = "1.4.9"
 
 
 def readme():
