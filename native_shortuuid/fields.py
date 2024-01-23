@@ -209,8 +209,6 @@ class NativeShortUUID20Field(django.db.models.UUIDField):
     def to_python(self, value):
         if value is not None and not isinstance(value, uuid.UUID):
             try:
-                if len(value) != 20:
-                    raise ValueError
                 return decode(value)
             except ValueError:
                 raise ValidationError(

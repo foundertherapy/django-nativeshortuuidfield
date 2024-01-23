@@ -346,10 +346,11 @@ class TestSaveLoadShortUUID20(django.test.TestCase):
         loaded = ShortUUID20Model.objects.get()
         self.assertEqual(loaded.field, instance.field)
 
-        # Test that creating record with 22 chars shortuuid will fail
-        with self.assertRaises(django.core.exceptions.ValidationError):
-            ShortUUID20Model.objects.create(
-                field=shortuuid.encode(native_shortuuid.fields.uuid4_12bits_masked(), pad_length=22))
+        # Test that creating record with 22 chars shortuuid will not fail
+        # with self.assertRaises(django.core.exceptions.ValidationError):
+        #     ShortUUID20Model.objects.create(
+        #         field=shortuuid.encode(native_shortuuid.fields.uuid4_12bits_masked(), pad_length=22))
+        ShortUUID20Model.objects.create(field=shortuuid.uuid())
 
     def test_null_handling(self):
         NullableShortUUID20Model.objects.create(field=None)
