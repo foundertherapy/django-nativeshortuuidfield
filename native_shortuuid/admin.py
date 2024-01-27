@@ -7,6 +7,7 @@ import native_shortuuid
 class NativeUUIDSearchMixin:
     search_uuid_fields = []
     admin_auto_extract_uuid_search_fields = True  # To customize a specific admins instead of all
+    change_list_template = 'admin/custom_change_list.html'
 
     def is_valid_shortuuid(self, search_term):
         try:
@@ -32,7 +33,7 @@ class NativeUUIDSearchMixin:
                 if self.is_model_field_native_short_uuid(search_field) or search_field.endswith('uuid'):
                     self.search_uuid_fields.append(search_field)
                     search_fields.remove(search_field)
-        return search_fields or ('id',)
+        return search_fields or self.get_non_uuid_search_fields()
 
     def get_search_results(self, request, queryset, search_term):
         results_queryset, use_distinct = super().get_search_results(request, queryset, search_term)
@@ -44,6 +45,12 @@ class NativeUUIDSearchMixin:
             return queryset.filter(field_queries), use_distinct
 
         return results_queryset, use_distinct
+
+    def get_non_uuid_search_fields(self) -> tuple:
+        """Returns the fallback list of non-UUID search fields"""
+        if isinstance(self.model._meta.pk, django.db.models.UUIDField):
+            return ()
+        return (self.model._meta.pk.name, )
 
 
 class NativeUUID20SearchMixin(NativeUUIDSearchMixin):
