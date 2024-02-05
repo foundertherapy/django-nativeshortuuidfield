@@ -7,7 +7,7 @@ import native_shortuuid
 class NativeUUIDSearchMixin:
     search_uuid_fields = []
     admin_auto_extract_uuid_search_fields = True  # To customize a specific admins instead of all
-    change_list_template = 'admin/custom_change_list.html'
+    change_list_template = 'admin/native_shortuuid/custom_change_list.html'
 
     def is_valid_shortuuid(self, search_term):
         try:

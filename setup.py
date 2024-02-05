@@ -4,7 +4,7 @@ import sys
 import setuptools
 from setuptools.command.install import install
 
-VERSION = "1.4.7"
+VERSION = "1.4.8"
 
 
 def readme():
@@ -34,6 +34,7 @@ setuptools.setup(
     long_description=readme(),
     long_description_content_type='text/markdown',
     url="https://github.com/foundertherapy/django-nativeshortuuidfield",
+    include_package_data=True,
     author="Laith Abu Zainih",
     author_email="systems@foundertherapy.co",
     license="MIT",
