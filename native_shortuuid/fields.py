@@ -9,19 +9,11 @@ import rest_framework.serializers
 import shortuuid
 
 
-def convert_uuid_to_uuid_v2(uuid_or_shortuuid22):
-    if isinstance(uuid_or_shortuuid22, uuid.UUID):
-        shortuuid22 = shortuuid.encode(uuid_or_shortuuid22)
-    else:
-        shortuuid22 = uuid_or_shortuuid22
+def convert_uuid_to_uuid_v2(uuid22):
+    if isinstance(uuid22, uuid.UUID):
+        uuid22 = shortuuid.encode(uuid22)
 
-    if len(shortuuid22) == 22:
-        shortuuid20 = shortuuid22[2:]
-    elif len(shortuuid22) == 20:
-        shortuuid20 = shortuuid22
-    else:
-        raise ValueError(f'Invalid ShortUUID {shortuuid22}')
-
+    shortuuid20 = uuid22[-20:]
     return shortuuid.decode(shortuuid20)
 
 
