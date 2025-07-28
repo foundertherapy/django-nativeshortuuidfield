@@ -53,11 +53,11 @@ setuptools.setup(
     keywords='shortuuid uuid nativeshortuuid',
     packages=setuptools.find_packages(),
     install_requires=[
-        "django>=1.11",
+        "django>=4.2",
         "djangorestframework>=3.13.1",
         "django-shortuuidfield"
     ],
-    python_requires='>=3',
+    python_requires='>=3.10',
     cmdclass={
         'verify': VerifyVersionCommand,
     }
