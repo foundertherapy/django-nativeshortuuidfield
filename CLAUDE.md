@@ -115,3 +115,7 @@ Development dependencies managed by hatch in `pyproject.toml`:
 
 ### Tool Preferences
 - Use hatch for all python, library, and pypi publishing management
+
+## Commit Guidelines
+
+- When writing git commit messages, omit all mention of claude

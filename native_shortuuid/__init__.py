@@ -13,7 +13,12 @@ from .fields import short_uuid4_20
 from .fields import uuid4_12bits_masked
 
 try:
-    VERSION = __import__('pkg_resources') \
-        .get_distribution('django-nativeshortuuidfield').version
+    from importlib.metadata import version
+    VERSION = version('django-nativeshortuuidfield')
 except Exception:
-    VERSION = 'unknown'
+    # Fallback for Python < 3.8 or if package not installed
+    try:
+        import pkg_resources
+        VERSION = pkg_resources.get_distribution('django-nativeshortuuidfield').version
+    except Exception:
+        VERSION = 'unknown'

@@ -1,14 +1,14 @@
 [project]
 name = "django-nativeshortuuidfield"
-version = "1.4.10"
+version = "1.4.11"
 description = "A decoder/encoder Field for uuid"
 readme = "README.md"
 authors = [
     { name = "Laith Abu Zainih", email = "systems@foundertherapy.co" }
 ]
-requires-python = ">=3.6"
+requires-python = ">=3.10"
 dependencies = [
-    "django>=1.11",
+    "django>=4.1",
     "djangorestframework>=3.13.1",
     "django-shortuuidfield",
 ]
@@ -21,7 +21,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Internet",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3 :: Only",
 ]
 keywords = ["shortuuid", "uuid", "nativeshortuuid"]
@@ -39,7 +39,7 @@ packages = ["native_shortuuid"]
 [tool.hatch.envs.default]
 dependencies = [
     "django",
-    "djangorestframework", 
+    "djangorestframework",
     "shortuuid",
     "isort",
     "flake8",
